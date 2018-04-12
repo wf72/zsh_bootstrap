@@ -55,7 +55,7 @@ git clone https://github.com/zsh-users/zsh-autosuggestions $ZSH_CUSTOM/plugins/z
 
 
 #replace home dir in our config
-sed -i 's/\{\{HOME_DIR\}\}/$HOME/' $BASEDIR/.zshrc
+sed -i "s,{{HOME_DIR}},$HOME," $BASEDIR/zshrc
 cp $BASEDIR/zshrc ~/.zshrc
 
 #import bash history to zsh
