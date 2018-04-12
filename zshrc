@@ -6,7 +6,6 @@ ZSH_TMUX_AUTOCONNECT=true
 plugins=(
   git
   zsh-autosuggestions
-  debian
   command-not-found
   common-aliases
   django

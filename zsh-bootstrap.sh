@@ -5,11 +5,12 @@ BASEDIR=$(dirname "$SCRIPT")
 ZSH_CUSTOM=$HOME/.oh-my-zsh/custom
 
 # install zsh
-sudo apt install zsh wget git
+sudo apt update
+sudo apt -y install zsh wget git tmux
 
 cd $HOME
 
-# install oh my zsh. source https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh
+# install oh-my-zsh. source https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh
 
   # Only enable exit-on-error after the non-critical colorization stuff,
   # which may fail on systems lacking tput or terminfo
@@ -52,13 +53,29 @@ cd $HOME
   fi
 
 # install autosuggestions
-git clone https://github.com/zsh-users/zsh-autosuggestions $ZSH_CUSTOM/plugins/zsh-autosuggestions
+if [ ! -d $ZSH_CUSTOM/plugins/zsh-autosuggestions ]; then
+	git clone https://github.com/zsh-users/zsh-autosuggestions $ZSH_CUSTOM/plugins/zsh-autosuggestions
+fi
 
 cd $BASEDIR
 
 # replace home dir in our config
 sed -i "s,HOME_DIR,$HOME," $BASEDIR/zshrc
+if [ -f ~/.zshrc ] || [ -h ~/.zshrc ]; then
+	mv ~/.zshrc ~/.zshrc.bak;
+fi
 cp $BASEDIR/zshrc ~/.zshrc
+
+if [ -f ~/.tmux.conf ] || [ -h ~/.tmux.conf ]; then
+	mv ~/.tmux.conf ~/.tmux.conf.bak;
+fi
+cp $BASEDIR/tmux.conf ~/.tmux.conf
+
+#install tmux tpm
+mkdir -p ~/.tmux/plugins/
+if [ ! -d ~/.tmux/plugins/tpm ]; then
+	git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+fi
 
 #import bash history to zsh
 if which ruby; then
