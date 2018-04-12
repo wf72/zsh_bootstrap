@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-BASEDIR=$(dirname "$0")
+SCRIPT=$(readlink -f "$0")
+BASEDIR=$(dirname "$SCRIPT")
 ZSH_CUSTOM=$HOME/.oh-my-zsh/custom
 
 # install zsh
@@ -53,6 +54,7 @@ cd $HOME
 # install autosuggestions
 git clone https://github.com/zsh-users/zsh-autosuggestions $ZSH_CUSTOM/plugins/zsh-autosuggestions
 
+cd $BASEDIR
 
 # replace home dir in our config
 sed -i "s,HOME_DIR,$HOME," $BASEDIR/zshrc
