@@ -50,12 +50,12 @@ cd $HOME
     fi
   fi
 
-#install autosuggestions
+# install autosuggestions
 git clone https://github.com/zsh-users/zsh-autosuggestions $ZSH_CUSTOM/plugins/zsh-autosuggestions
 
 
-#replace home dir in our config
-sed -i "s,{{HOME_DIR}},$HOME," $BASEDIR/zshrc
+# replace home dir in our config
+sed -i "s,HOME_DIR,$HOME," $BASEDIR/zshrc
 cp $BASEDIR/zshrc ~/.zshrc
 
 #import bash history to zsh

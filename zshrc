@@ -1,4 +1,4 @@
-export ZSH={{HOME_DIR}}/.oh-my-zsh
+export ZSH=HOME_DIR/.oh-my-zsh
 
 ZSH_TMUX_AUTOSTART=true
 ZSH_TMUX_AUTOCONNECT=true
