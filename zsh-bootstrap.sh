@@ -5,7 +5,7 @@ BASEDIR=$(dirname "$SCRIPT")
 ZSH_CUSTOM=$HOME/.oh-my-zsh/custom
 
 # install zsh
-sudo apt install zsh wget git ruby
+sudo apt install zsh wget git
 
 cd $HOME
 
@@ -61,4 +61,8 @@ sed -i "s,HOME_DIR,$HOME," $BASEDIR/zshrc
 cp $BASEDIR/zshrc ~/.zshrc
 
 #import bash history to zsh
+if which ruby; then
+ruby ./bash_to_zsh_history.rb
+elif which python; then
 python ./bash_to_zsh_history.py
+fi
