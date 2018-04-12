@@ -62,7 +62,8 @@ cp $BASEDIR/zshrc ~/.zshrc
 
 #import bash history to zsh
 if which ruby; then
-ruby ./bash_to_zsh_history.rb
+	ruby ./bash_to_zsh_history.rb
+	exit
 elif which python; then
-python ./bash_to_zsh_history.py
+	python ./bash_to_zsh_history.py
 fi
