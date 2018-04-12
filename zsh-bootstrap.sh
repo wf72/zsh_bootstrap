@@ -3,7 +3,7 @@
 BASEDIR=$(dirname "$0")
 
 # install zsh
-sudo apt install zsh
+sudo apt install zsh wget git
 
 cd $HOME
 
@@ -15,7 +15,7 @@ git clone https://github.com/zsh-users/zsh-autosuggestions $ZSH_CUSTOM/plugins/z
 
 #replace home dir in our config
 sed -i 's/\{\{HOME_DIR\}\}/$HOME/' $BASEDIR/.zshrc
-cp $BASEDIR/.zshrc ~/.zshrc
+cp $BASEDIR/zshrc ~/.zshrc
 
 #import bash history to zsh
 ruby ./import_history.rb
