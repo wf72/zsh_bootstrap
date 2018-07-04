@@ -92,6 +92,18 @@ if [ -f ~/.tmux.conf ] || [ -h ~/.tmux.conf ]; then
 fi
 cp $BASEDIR/tmux.conf ~/.tmux.conf
 
+currentver="$(tmux -V | cut -f2 -d" ")"
+requiredver="2.1"
+ if [ "$(printf '%s\n' "$requiredver" "$currentver" | sort -V | head -n1)" = "$requiredver" ]; then
+        echo "set -g mouse on" >> ~/.tmux.conf
+ else
+        echo "setw -g mode-mouse on" >> ~/.tmux.conf
+        echo "set -g mouse-select-pane on" >> ~/.tmux.conf
+        echo "set -g mouse-resize-pane on" >> ~/.tmux.conf
+        echo "set -g mouse-select-window on" >> ~/.tmux.conf
+ fi
+echo "run '~/.tmux/plugins/tpm/tpm'" >> ~/.tmux.conf
+
 #install tmux tpm
 mkdir -p ~/.tmux/plugins/
 if [ ! -d ~/.tmux/plugins/tpm ]; then
@@ -105,3 +117,4 @@ if which ruby; then
 elif which python; then
 	python ./bash_to_zsh_history.py
 fi
+
