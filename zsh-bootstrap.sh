@@ -81,11 +81,10 @@ fi
 cd $BASEDIR
 
 # replace home dir in our config
-sed -i "s,HOME_DIR,$HOME," $BASEDIR/zshrc
 if [ -f ~/.zshrc ] || [ -h ~/.zshrc ]; then
 	mv ~/.zshrc ~/.zshrc.bak;
 fi
-cp $BASEDIR/zshrc ~/.zshrc
+cat $BASEDIR/zshrc | sed "s,HOME_DIR,$HOME," > ~/.zshrc
 
 if [ -f ~/.tmux.conf ] || [ -h ~/.tmux.conf ]; then
 	mv ~/.tmux.conf ~/.tmux.conf.bak;
