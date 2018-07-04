@@ -28,6 +28,7 @@ fi
 if [ "$DISTRO" == "freebsd" ]; then
 	sudo pkg install -y zsh wget git tmux
 fi
+unset DISTRO
 
 cd $HOME
 
@@ -101,6 +102,8 @@ requiredver="2.1"
         echo "set -g mouse-resize-pane on" >> ~/.tmux.conf
         echo "set -g mouse-select-window on" >> ~/.tmux.conf
  fi
+unset currentver
+unset requiredver
 echo "run '~/.tmux/plugins/tpm/tpm'" >> ~/.tmux.conf
 
 #install tmux tpm
@@ -117,7 +120,6 @@ tmux new-session -d
 # killing the server is not required, I guess
 tmux kill-server
 
-
 #import bash history to zsh
 if which ruby; then
 	ruby ./bash_to_zsh_history.rb
@@ -126,3 +128,6 @@ elif which python; then
 	python ./bash_to_zsh_history.py
 fi
 
+unset SCRIPT
+unset BASEDIR
+unset ZSH_CUSTOM
