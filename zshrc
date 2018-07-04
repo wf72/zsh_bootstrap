@@ -48,3 +48,5 @@ tmux-new() {
     tmux new-session "$@"
   fi
 }
+
+export TERM="xterm-256color"
