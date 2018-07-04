@@ -26,7 +26,7 @@ if [ "$DISTRO" == "Ubuntu" ]; then
 fi
 
 if [ "$DISTRO" == "freebsd" ]; then
-	sudo pkg install zsh wget git tmux
+	sudo pkg install -y zsh wget git tmux
 fi
 
 cd $HOME
