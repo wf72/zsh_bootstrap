@@ -63,6 +63,7 @@ fi
 if [ -n "$TMUX" ]; then
 	# install the plugins
 	~/.tmux/plugins/tpm/scripts/install_plugins.sh
+	tmux source ~/.tmux.conf
 else
 	# start a server but don't attach to it
 	tmux start-server
