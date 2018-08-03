@@ -3,7 +3,7 @@ export ZSH=HOME_DIR/.oh-my-zsh
 ZSH_THEME="dieter"
 
 ZSH_TMUX_AUTOSTART=true
-ZSH_TMUX_AUTOCONNECT=true
+ZSH_TMUX_AUTOCONNECT=false
 
 plugins=(
   git
@@ -50,3 +50,17 @@ tmux-new() {
 }
 
 export TERM="xterm-256color"
+
+declare TMUX
+MOTD="/var/run/motd.dynamic"
+ISSUE="/etc/issue"
+
+if [ ! -z "$TMUX" ]; then
+      if [ -f "$MOTD" ]; then
+            cat "$MOTD"
+      elif [ -f "$ISSUE" ]; then
+            cat "$ISSUE"
+      else
+:
+      fi
+fi
