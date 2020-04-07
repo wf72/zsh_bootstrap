@@ -26,7 +26,7 @@ plugins=(
 
 source $ZSH/oh-my-zsh.sh
 
-local pwd="%{$fg[blue]%}%~%{$reset_color%}"
+local pwd="%{$fg[cyan]%}%~%{$reset_color%}"
 
 PROMPT='${time} ${user}${host} ${pwd} $(git_prompt_info)> '
 

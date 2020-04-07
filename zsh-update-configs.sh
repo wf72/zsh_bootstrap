@@ -40,6 +40,13 @@ if [ -f ~/.tmux.conf ] || [ -h ~/.tmux.conf ]; then
 fi
 cp $BASEDIR/tmux.conf ~/.tmux.conf
 
+# vimrc install
+if [ -f ~/.vimrc ] || [ -h ~/.vimrc ]; then
+	mv ~/.vimrc ~/.vimrc.bak;
+fi
+
+cp $BASEDIR/.vimrc ~/.vimrc
+
 currentver="$(tmux -V | cut -f2 -d" ")"
 requiredver="2.1"
  if [ "$(printf '%s\n' "$requiredver" "$currentver" | sort -V | head -n1)" = "$requiredver" ]; then
