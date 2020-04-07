@@ -28,4 +28,4 @@ set listchars=tab:··
 set list
 
 set nocompatible
-set colorscheme desert
+colorscheme desert
