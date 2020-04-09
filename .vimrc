@@ -24,8 +24,8 @@ set smartcase
 set autowrite
 set hidden
 
-set listchars=tab:··
-set list
+" set listchars=tab:··
+" set list
 
 set nocompatible
 colorscheme desert
