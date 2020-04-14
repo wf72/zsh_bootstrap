@@ -36,6 +36,8 @@ export HISTSIZE=32768;
 export HISTFILESIZE=$HISTSIZE;
 export HISTCONTROL=ignoredups;
 export HISTIGNORE="ls:cd:cd -:pwd:exit:date:* --help";
+export EDITOR=/usr/bin/vim
+export VISUAL=/usr/bin/vim
 
 # create new session
 # example usage:
