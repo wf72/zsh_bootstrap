@@ -103,7 +103,7 @@ requiredver="2.9"
     if [ -f ~/.tmux.conf ] || [ -h ~/.tmux.conf ]; then
       mv ~/.tmux.conf ~/.tmux.conf.bak;
     fi
-    cp $BASEDIR/tmux29.conf ~/.tmux.conf
+    cp $BASEDIR/tmux_29.conf ~/.tmux.conf
  else
     if [ -f ~/.tmux.conf ] || [ -h ~/.tmux.conf ]; then
       mv ~/.tmux.conf ~/.tmux.conf.bak;
