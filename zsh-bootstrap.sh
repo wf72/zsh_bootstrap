@@ -88,10 +88,6 @@ fi
 
 cat $BASEDIR/zshrc | sed "s,HOME_DIR,$HOME," > ~/.zshrc
 
-if [ -f ~/.tmux.conf ] || [ -h ~/.tmux.conf ]; then
-	mv ~/.tmux.conf ~/.tmux.conf.bak;
-fi
-cp $BASEDIR/tmux.conf ~/.tmux.conf
 
 # vimrc install
 if [ -f ~/.vimrc ] || [ -h ~/.vimrc ]; then
@@ -100,7 +96,20 @@ fi
 
 cp $BASEDIR/.vimrc ~/.vimrc
 
+# TMUX configure
 currentver="$(tmux -V | cut -f2 -d" ")"
+requiredver="2.9"
+ if [ "$(printf '%s\n' "$requiredver" "$currentver" | sort -V | head -n1)" = "$requiredver" ]; then
+    if [ -f ~/.tmux.conf ] || [ -h ~/.tmux.conf ]; then
+      mv ~/.tmux.conf ~/.tmux.conf.bak;
+    fi
+    cp $BASEDIR/tmux29.conf ~/.tmux.conf
+ else
+    if [ -f ~/.tmux.conf ] || [ -h ~/.tmux.conf ]; then
+      mv ~/.tmux.conf ~/.tmux.conf.bak;
+    fi
+    cp $BASEDIR/tmux.conf ~/.tmux.conf
+ fi
 requiredver="2.1"
  if [ "$(printf '%s\n' "$requiredver" "$currentver" | sort -V | head -n1)" = "$requiredver" ]; then
         echo "set -g mouse on" >> ~/.tmux.conf
@@ -110,6 +119,8 @@ requiredver="2.1"
         echo "set -g mouse-resize-pane on" >> ~/.tmux.conf
         echo "set -g mouse-select-window on" >> ~/.tmux.conf
  fi
+
+
 unset currentver
 unset requiredver
 echo "run '~/.tmux/plugins/tpm/tpm'" >> ~/.tmux.conf
