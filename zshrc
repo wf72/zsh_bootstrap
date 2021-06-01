@@ -1,9 +1,9 @@
-export ZSH=HOME_DIR/.oh-my-zsh
+export ZSH=/home/wf/.oh-my-zsh
 
 ZSH_THEME="dieter"
 
-ZSH_TMUX_AUTOSTART=true
-ZSH_TMUX_AUTOCONNECT=true
+ZSH_TMUX_AUTOSTART=false
+ZSH_TMUX_AUTOCONNECT=false
 
 plugins=(
   git
@@ -22,6 +22,10 @@ plugins=(
   nmap
   rsync
   ubuntu
+  ansible
+  docker-compose
+  vagrant
+  vagrant-prompt
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -32,6 +36,9 @@ local pwd="%{$fg[cyan]%}%~%{$reset_color%}"
 PROMPT='${time} ${user}${host} ${pwd} $(git_prompt_info)> '
 
 COMPLETION_WAITING_DOTS="true"
+
+# molecule autocomplit
+eval "$(_MOLECULE_COMPLETE=SHELL_source molecule)"
 
 export HISTSIZE=32768;
 export HISTFILESIZE=$HISTSIZE;
