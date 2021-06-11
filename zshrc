@@ -38,7 +38,7 @@ PROMPT='${time} ${user}${host} ${pwd} $(git_prompt_info)> '
 COMPLETION_WAITING_DOTS="true"
 
 # molecule autocomplit
-eval "$(_MOLECULE_COMPLETE=SHELL_source molecule)"
+#eval "$(_MOLECULE_COMPLETE=SHELL_source molecule)"
 
 export HISTSIZE=32768;
 export HISTFILESIZE=$HISTSIZE;
