@@ -1,4 +1,4 @@
-Для установки использовать: zsh-bootstrap.sh
+# ZSH Boostrap scripts
 
 Скрипт устанавливает:
 
@@ -22,3 +22,17 @@
 В .tmux.conf минимальные необходимые настройки, включен менеджер плагинов tpm и режим управления мышкой
 
 Проверен на Ubuntu и FreeBSD (10.2)
+
+# zsh install
+
+```bash
+cd ~
+git clone https://github.com/wf72/zsh_bootstrap.git
+cd zsh_bootstrap/
+bash ./zsh-bootstrap.sh
+```
+
+## Import history
+```bash
+python3 ./bash_to_zsh_history.py
+```
