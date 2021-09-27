@@ -10,7 +10,6 @@ plugins=(
   zsh-autosuggestions
   command-not-found
   common-aliases
-  django
   docker
   knife
   pip
