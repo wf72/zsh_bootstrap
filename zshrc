@@ -1,6 +1,9 @@
 export ZSH=HOME_DIR/.oh-my-zsh
 
-ZSH_THEME="dieter"
+#ZSH_THEME="dieter"
+#ZSH_THEME="fino-time"
+ZSH_THEME="rkj-repos"
+
 
 ZSH_TMUX_AUTOSTART=false
 ZSH_TMUX_AUTOCONNECT=false
