@@ -11,7 +11,6 @@ plugins=(
   command-not-found
   common-aliases
   docker
-  knife
   pip
   python
   pyenv
@@ -45,6 +44,13 @@ export HISTCONTROL=ignoredups;
 export HISTIGNORE="ls:cd:cd -:pwd:exit:date:* --help";
 export EDITOR=/usr/bin/vim
 export VISUAL=/usr/bin/vim
+
+#alias ls='exa'
+#alias lst='exa -T'
+#alias l='exa -lFh' 
+#alias la='exa -laFh'
+#alias ll='exa -l'
+
 
 # create new session
 # example usage:
