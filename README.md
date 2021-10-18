@@ -36,3 +36,7 @@ bash ./zsh-bootstrap.sh
 ```bash
 python3 ./bash_to_zsh_history.py
 ```
+
+## vim install plugins
+Для установки плагинов в Vim выполнить
+:PlugInstall
