@@ -31,10 +31,10 @@ plugins=(
 
 source $ZSH/oh-my-zsh.sh
 
-local user="%(!.%{$fg[cyan]%}.%{$fg[cyan]%})%n%{$reset_color%}"
-local pwd="%{$fg[cyan]%}%~%{$reset_color%}"
-
-PROMPT='${time} ${user}${host} ${pwd} $(git_prompt_info)> '
+# disabled, delete in future
+#local user="%(!.%{$fg[cyan]%}.%{$fg[cyan]%})%n%{$reset_color%}"
+#local pwd="%{$fg[cyan]%}%~%{$reset_color%}"
+#PROMPT='${time} ${user}${host} ${pwd} $(git_prompt_info)> '
 
 COMPLETION_WAITING_DOTS="true"
 
@@ -48,6 +48,7 @@ export HISTIGNORE="ls:cd:cd -:pwd:exit:date:* --help";
 export EDITOR=/usr/bin/vim
 export VISUAL=/usr/bin/vim
 
+# install exa for pretty ls and uncoment this string
 #alias ls='exa'
 #alias lst='exa -T'
 #alias l='exa -lFh' 
