@@ -139,6 +139,10 @@ tmux new-session -d
 # killing the server is not required, I guess
 tmux kill-server
 
+# install vim-plug
+curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
 #import bash history to zsh
 if which ruby; then
 	ruby ./bash_to_zsh_history.rb
