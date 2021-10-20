@@ -1,9 +1,6 @@
 " Helps force plug-ins to load correctly when it is turned back on below.
 filetype off
 
-" Enable syntax highlighting
-syntax on
-
 " Set the shell
 set shell=/bin/zsh
 

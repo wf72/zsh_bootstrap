@@ -38,5 +38,6 @@ python3 ./bash_to_zsh_history.py
 ```
 
 ## vim install plugins
-Для установки плагинов в Vim выполнить
-:PlugInstall
+Устанавливаются плагины:
+ - vim-airline
+ - Themes thender

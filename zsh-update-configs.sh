@@ -74,6 +74,7 @@ fi
 
 if [ -n "$TMUX" ]; then
 	# install the plugins
+	tmux source ~/.tmux.conf
 	~/.tmux/plugins/tpm/scripts/install_plugins.sh
 	tmux source ~/.tmux.conf
 else
@@ -81,6 +82,7 @@ else
 	tmux start-server
 	# create a new session but don't attach to it either
 	tmux new-session -d
+	tmux source ~/.tmux.conf
 	# install the plugins
 	~/.tmux/plugins/tpm/scripts/install_plugins.sh
 	# killing the server is not required, I guess
@@ -88,8 +90,11 @@ else
 fi
 
 # install vim-plug
-curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+if [ ! -f ~/.vim/autoload/plug.vim ]; then
+ curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+fi
+vim +PlugInsall +qall
 
 
 unset SCRIPT
