@@ -49,11 +49,11 @@ export EDITOR=/usr/bin/vim
 export VISUAL=/usr/bin/vim
 
 # install exa for pretty ls and uncoment this string
-#alias ls='exa'
-#alias lst='exa -T'
-#alias l='exa -lFh' 
-#alias la='exa -laFh'
-#alias ll='exa -l'
+alias ls='exa'
+alias lst='exa -T'
+alias l='exa -lFh' 
+alias la='exa -laFh'
+alias ll='exa -l'
 
 
 # create new session
