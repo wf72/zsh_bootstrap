@@ -3,6 +3,8 @@
 SCRIPT=$(readlink -f "$0")
 BASEDIR=$(dirname "$SCRIPT")
 ZSH_CUSTOM=$HOME/.oh-my-zsh/custom
+KUBECTL_VERSION=v1.23.4
+ARGOCD_VERSION=v2.6.11
 
 # install zsh
 UNAME=$(uname | tr "[:upper:]" "[:lower:]")
@@ -26,7 +28,7 @@ if [ "$DISTRO" == "Ubuntu" ]; then
 fi
 
 if [ "$DISTRO" == "freebsd" ]; then
-	sudo pkg install -y zsh wget git tmux exa curl
+	sudo pkg install -y zsh wget git tmux exa curl 
 fi
 unset DISTRO
 
@@ -50,7 +52,7 @@ if [ -f ~/.zshrc ] || [ -h ~/.zshrc ]; then
 	mv ~/.zshrc ~/.zshrc.bak;
 fi
 
-cat $BASEDIR/zshrc | sed "s,HOME_DIR,$HOME," > ~/.zshrc
+cat $BASEDIR/zshrc-k8s | sed "s,HOME_DIR,$HOME," > ~/.zshrc
 
 
 # vimrc install
@@ -111,6 +113,30 @@ if [ ! -f ~/.vim/autoload/plug.vim ]; then
 fi
 vim +PlugInsall +qall
 
+# install kubectl
+curl -L https://dl.k8s.io/release/$KUBECTL_VERSION/bin/linux/amd64/kubectl -o /tmp/kubectl
+sudo install -b /tmp/kubectl /usr/bin
+rm -f /tmp/kubectl
+
+# install argocd cli
+curl -sSL -o /tmp/argocd https://github.com/argoproj/argo-cd/releases/download/$ARGOCD_VERSION/argocd-linux-amd64
+sudo install -b /tmp/argocd /usr/local/bin
+rm -f /tmp/argocd
+
+# install kubectx and kubens
+if [ ! -d /opt/kubectx ]; then
+  sudo git clone https://github.com/ahmetb/kubectx /opt/kubectx
+else
+  cd /opt/kubectx
+  sudo git pull
+fi
+cd $BASEDIR
+sudo ln -fs /opt/kubectx/kubectx /usr/local/bin/kubectx
+sudo ln -fs /opt/kubectx/kubens /usr/local/bin/kubens
+mkdir -p ~/.oh-my-zsh/completions
+chmod -R 755 ~/.oh-my-zsh/completions
+ln -fs /opt/kubectx/completion/_kubectx.zsh ~/.oh-my-zsh/completions/_kubectx.zsh
+ln -fs /opt/kubectx/completion/_kubens.zsh ~/.oh-my-zsh/completions/_kubens.zsh
 
 #import bash history to zsh
 if which python3; then
