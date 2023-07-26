@@ -1,0 +1,110 @@
+export ZSH=/home/wf/.oh-my-zsh
+
+#ZSH_THEME="dieter"
+ZSH_THEME="fino-time"
+#ZSH_THEME="rkj-repos"
+
+
+ZSH_TMUX_AUTOSTART=false
+ZSH_TMUX_AUTOCONNECT=false
+
+plugins=(
+  git
+  zsh-autosuggestions
+  command-not-found
+  common-aliases
+  docker
+  pip
+  python
+  pyenv
+  sudo
+  systemd
+  tmux
+  nmap
+  rsync
+  ubuntu
+  ansible
+  docker-compose
+  vagrant
+  kubectl
+  kube-ps1
+  minikube
+  helm
+  history
+  argocd
+)
+
+source $ZSH/oh-my-zsh.sh
+
+# kubectx & kubens
+autoload -U compinit && compinit
+alias kctx='kubectx'
+alias kns='kubens'
+
+COMPLETION_WAITING_DOTS="true"
+
+KUBE_PS1_PREFIX=''
+KUBE_PS1_SUFFIX=''
+KUBE_PS1_SYMBOL_USE_IMG=true
+KUBE_PS1_SEPARATOR=''
+KUBE_PS1_CTX_COLOR=green
+
+#PROMPT='$(kube_ps1)'$PROMPT
+PROMPT="╭─%{$FG[040]%}%n%{$reset_color%} %{$FG[239]%}at%{$reset_color%} %{$FG[033]%}$(box_name)%{$reset_color%} "'$(kube_ps1)'" %{$FG[239]%}in%{$reset_color%} %{$terminfo[bold]$FG[226]%}%~%{$reset_color%}\$(git_prompt_info)\$(ruby_prompt_info) %D - %*
+╰─\$(virtualenv_info)\$(prompt_char) "
+
+# molecule autocomplit
+#eval "$(_MOLECULE_COMPLETE=SHELL_source molecule)"
+
+export HISTSIZE=32768;
+export HISTFILESIZE=$HISTSIZE;
+export HISTCONTROL=ignoredups;
+export HISTIGNORE="ls:cd:cd -:pwd:exit:date:* --help";
+export EDITOR=/usr/bin/vim
+export VISUAL=/usr/bin/vim
+
+export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+
+# install exa for pretty ls and uncoment this string
+alias ls='exa'
+alias lst='exa -T'
+alias l='exa -lFh' 
+alias la='exa -laFh'
+alias ll='exa -l'
+
+
+# create new session
+# example usage:
+# tmux-new -s NAME_OF_SESSION
+# https://superuser.com/questions/821339/start-a-new-session-from-within-tmux-with-zsh-tmux-autostart-true
+tmux-new() {
+  if [[ -n $TMUX ]]; then
+    tmux switch-client -t "$(TMUX= tmux -S "${TMUX%,*,*}" new-session -dP "$@")"
+  else
+    tmux new-session "$@"
+  fi
+}
+
+export TERM="xterm-256color"
+
+declare TMUX
+MOTD="/var/run/motd.dynamic"
+ISSUE="/etc/issue"
+
+if [ ! -z "$TMUX" ]; then
+      if [ -f "$MOTD" ]; then
+            cat "$MOTD"
+      elif [ -f "$ISSUE" ]; then
+            cat "$ISSUE"
+      else
+:
+      fi
+fi
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+# The next line updates PATH for Yandex Cloud CLI.
+if [ -f '/home/wf/yandex-cloud/path.bash.inc' ]; then source '/home/wf/yandex-cloud/path.bash.inc'; fi
+
+# The next line enables shell command completion for yc.
+if [ -f '/home/wf/yandex-cloud/completion.zsh.inc' ]; then source '/home/wf/yandex-cloud/completion.zsh.inc'; fi
+

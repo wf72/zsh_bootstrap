@@ -23,6 +23,8 @@
 
 Проверен на Ubuntu, Debian и FreeBSD (10.2)
 
+Версия с постфиксом k8s устанавливает плагины для удобной работы с kubernetes.
+
 # zsh install
 
 ```bash
