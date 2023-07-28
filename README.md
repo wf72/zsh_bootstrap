@@ -2,44 +2,63 @@
 
 Скрипт устанавливает:
 
-    zsh
-    oh-my-zsh
-    zsh-autosuggestions
-    tmux
-    git
-    wget
+* zsh
+* [oh-my-zsh](https://ohmyz.sh/)
+* [zellij](https://zellij.dev/)
+* git
+* wget
+* curl
+* [brew](https://brew.sh/)
+* [exa](https://github.com/ogham/exa)
+* [vim-plug](https://github.com/junegunn/vim-plug)
+* [spacer](https://github.com/samwho/spacer)
 
-В .zshrc основные настройки:
+В .zshrc основные настройки/дополнения:
 
-	При подключении к хосту по ssh запускается tmux
-	git - Плагин для git
-	zsh-autosuggestions - Плагин автодоплнения из истории
-	command-not-found - если комманда не найдена, показывает как установить
-	еще несколько плагинов с алиасами и автодополнениями, например по sudo, pip, python
-	изменена стандартная тема
-	изменён prompt
+* git - Плагин для git
+* zsh-autosuggestions - Плагин автодоплнения из истории
+* command-not-found - если комманда не найдена, показывает как установить
+* еще несколько плагинов с алиасами и автодополнениями, например по sudo, pip, python
+* [zsh-syntax-highlighting](https://github.com/zsh-users/zsh-syntax-highlighting)
+* изменена стандартная тема
+* изменён prompt
 
-В .tmux.conf минимальные необходимые настройки, включен менеджер плагинов tpm и режим управления мышкой
+В zellij увеличина история прокрутки
 
-Проверен на Ubuntu, Debian и FreeBSD (10.2)
+Проверен на Ubuntu
 
-Версия с постфиксом k8s устанавливает плагины для удобной работы с kubernetes.
+## vim
+Для vim устанавливаются:
+ - Плагин [vim-airline](https://github.com/vim-airline/vim-airline)
+ - Тема [tender](https://github.com/jacoborus/tender.vim)
 
-# zsh install
+## k8s
+Версия с постфиксом k8s настраивает оболочку для удобной работы с kubernetes. Дополнительно устанавливаются:
+* kubectl v1.23.4
+* argocd cli v2.6.11
+* helm
+* [k9s](https://k9scli.io/)
+* [KUBE_PS1](https://github.com/jonmosco/kube-ps1) и изменяет промпт для отображения context и namespace
+* [kubectx, kubens](https://github.com/ahmetb/kubectx)
+* [kubecolor] https://github.com/hidetatz/kubecolor
+* alias kubectl=k
+* [krew](https://krew.sigs.k8s.io/)
+* [ktop](https://github.com/vladimirvivien/ktop)
+* [kubelogin](https://github.com/int128/kubelogin)
+* [ketall](https://github.com/corneliusweig/ketall)
+
+
+# install
 
 ```bash
-cd ~
 git clone https://github.com/wf72/zsh_bootstrap.git
 cd zsh_bootstrap/
 bash ./zsh-bootstrap.sh
 ```
 
 ## Import history
+Запускается автоматически и не требует одельного запуска.
 ```bash
 python3 ./bash_to_zsh_history.py
 ```
 
-## vim install plugins
-Устанавливаются плагины:
- - vim-airline
- - Themes thender

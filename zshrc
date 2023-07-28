@@ -27,6 +27,7 @@ plugins=(
   docker-compose
   vagrant
   vagrant-prompt
+  zsh-syntax-highlighting
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -55,31 +56,4 @@ alias l='exa -lFh'
 alias la='exa -laFh'
 alias ll='exa -l'
 
-
-# create new session
-# example usage:
-# tmux-new -s NAME_OF_SESSION
-# https://superuser.com/questions/821339/start-a-new-session-from-within-tmux-with-zsh-tmux-autostart-true
-tmux-new() {
-  if [[ -n $TMUX ]]; then
-    tmux switch-client -t "$(TMUX= tmux -S "${TMUX%,*,*}" new-session -dP "$@")"
-  else
-    tmux new-session "$@"
-  fi
-}
-
-export TERM="xterm-256color"
-
-declare TMUX
-MOTD="/var/run/motd.dynamic"
-ISSUE="/etc/issue"
-
-if [ ! -z "$TMUX" ]; then
-      if [ -f "$MOTD" ]; then
-            cat "$MOTD"
-      elif [ -f "$ISSUE" ]; then
-            cat "$ISSUE"
-      else
-:
-      fi
-fi
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"

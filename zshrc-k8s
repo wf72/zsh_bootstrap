@@ -4,10 +4,6 @@ export ZSH=/home/wf/.oh-my-zsh
 ZSH_THEME="fino-time"
 #ZSH_THEME="rkj-repos"
 
-
-ZSH_TMUX_AUTOSTART=false
-ZSH_TMUX_AUTOCONNECT=false
-
 plugins=(
   git
   zsh-autosuggestions
@@ -19,7 +15,6 @@ plugins=(
   pyenv
   sudo
   systemd
-  tmux
   nmap
   rsync
   ubuntu
@@ -32,6 +27,7 @@ plugins=(
   helm
   history
   argocd
+  zsh-syntax-highlighting
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -72,39 +68,8 @@ alias l='exa -lFh'
 alias la='exa -laFh'
 alias ll='exa -l'
 
+# kubecolor
+alias kubectl=kubecolor
+compdef kubecolor=kubectl
 
-# create new session
-# example usage:
-# tmux-new -s NAME_OF_SESSION
-# https://superuser.com/questions/821339/start-a-new-session-from-within-tmux-with-zsh-tmux-autostart-true
-tmux-new() {
-  if [[ -n $TMUX ]]; then
-    tmux switch-client -t "$(TMUX= tmux -S "${TMUX%,*,*}" new-session -dP "$@")"
-  else
-    tmux new-session "$@"
-  fi
-}
-
-export TERM="xterm-256color"
-
-declare TMUX
-MOTD="/var/run/motd.dynamic"
-ISSUE="/etc/issue"
-
-if [ ! -z "$TMUX" ]; then
-      if [ -f "$MOTD" ]; then
-            cat "$MOTD"
-      elif [ -f "$ISSUE" ]; then
-            cat "$ISSUE"
-      else
-:
-      fi
-fi
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-
-# The next line updates PATH for Yandex Cloud CLI.
-if [ -f '/home/wf/yandex-cloud/path.bash.inc' ]; then source '/home/wf/yandex-cloud/path.bash.inc'; fi
-
-# The next line enables shell command completion for yc.
-if [ -f '/home/wf/yandex-cloud/completion.zsh.inc' ]; then source '/home/wf/yandex-cloud/completion.zsh.inc'; fi
-
