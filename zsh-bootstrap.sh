@@ -25,8 +25,8 @@ if [ "$DISTRO" == "Ubuntu" ]; then
 	sudo apt -y install zsh wget git exa curl
 fi
 
-if [ "$DISTRO" == "freebsd" ]; then
-	sudo pkg install -y zsh wget git exa curl
+if [[ "$DISTRO" == *"redhat"* ]]; then
+	sudo dnf install -y zsh wget git exa curl
 fi
 unset DISTRO
 
