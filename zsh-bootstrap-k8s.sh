@@ -30,6 +30,10 @@ fi
 if [ "$DISTRO" == "freebsd" ]; then
 	sudo pkg install -y zsh wget git exa curl build-essential
 fi
+
+if [[ "$DISTRO" == *"redhat"* ]]; then
+	sudo dnf install -y zsh wget git exa curl sqlite
+fi
 unset DISTRO
 
 cd $HOME

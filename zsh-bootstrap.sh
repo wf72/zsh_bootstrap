@@ -26,7 +26,7 @@ if [ "$DISTRO" == "Ubuntu" ]; then
 fi
 
 if [[ "$DISTRO" == *"redhat"* ]]; then
-	sudo dnf install -y zsh wget git exa curl
+	sudo dnf install -y zsh wget git exa curl sqlite
 fi
 unset DISTRO
 
