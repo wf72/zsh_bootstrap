@@ -83,6 +83,10 @@ tar -xzf /tmp/zellij.tar.gz -C /tmp
 sudo install -b /tmp/zellij /usr/local/bin
 rm -f /tmp/zellij
 
+if ! test -d ~/.config/zellij; then
+	mkdir -p ~/.config/zellij
+fi
+
 if [ -f ~/.config/zellij/config.kdl ] || [ -h ~/.config/zellij/config.kdl ]; then
 	mv ~/.config/zellij/config.kdl ~/.config/zellij/config.kdl.bak;
 fi
