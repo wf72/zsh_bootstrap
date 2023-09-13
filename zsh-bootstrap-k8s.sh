@@ -30,6 +30,10 @@ fi
 if [ "$DISTRO" == "freebsd" ]; then
 	sudo pkg install -y zsh wget git exa curl build-essential
 fi
+
+if [[ "$DISTRO" == *"redhat"* ]]; then
+	sudo dnf install -y zsh wget git exa curl sqlite
+fi
 unset DISTRO
 
 cd $HOME
@@ -66,7 +70,7 @@ if [ ! -f ~/.vim/autoload/plug.vim ]; then
   curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
      https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 fi
-vim +PlugInsall +qall
+vim +PlugInstall +qall
 
 # install homebrew https://brew.sh/
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"

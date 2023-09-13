@@ -25,8 +25,8 @@ if [ "$DISTRO" == "Ubuntu" ]; then
 	sudo apt -y install zsh wget git exa curl
 fi
 
-if [ "$DISTRO" == "freebsd" ]; then
-	sudo pkg install -y zsh wget git exa curl
+if [[ "$DISTRO" == *"redhat"* ]]; then
+	sudo dnf install -y zsh wget git exa curl sqlite
 fi
 unset DISTRO
 
@@ -64,7 +64,7 @@ if [ ! -f ~/.vim/autoload/plug.vim ]; then
   curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
      https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 fi
-vim +PlugInsall +qall
+vim +PlugInstall +qall
 
 # install homebrew https://brew.sh/
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -82,6 +82,10 @@ curl -sSL https://github.com/zellij-org/zellij/releases/latest/download/zellij-x
 tar -xzf /tmp/zellij.tar.gz -C /tmp
 sudo install -b /tmp/zellij /usr/local/bin
 rm -f /tmp/zellij
+
+if ! test -d ~/.config/zellij; then
+	mkdir -p ~/.config/zellij
+fi
 
 if [ -f ~/.config/zellij/config.kdl ] || [ -h ~/.config/zellij/config.kdl ]; then
 	mv ~/.config/zellij/config.kdl ~/.config/zellij/config.kdl.bak;

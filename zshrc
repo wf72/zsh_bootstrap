@@ -19,7 +19,6 @@ plugins=(
   pyenv
   sudo
   systemd
-  tmux
   nmap
   rsync
   ubuntu
