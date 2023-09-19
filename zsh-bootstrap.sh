@@ -18,7 +18,7 @@ while [ : ]; do
         shift
         ;;
     -m | --manual)
-        echo "Processing manual option. Manually install packages: zsh wget git exa curl sqlite"
+        echo "Processing manual option. Manually install packages: zsh wget git curl sqlite"
 		manual_packet_install="non zero string ;)"
         shift
         ;;
@@ -29,8 +29,8 @@ while [ : ]; do
 done
 
 # check sudo
-if test ! -z $(type sudo); then
-	echo "sudo command not found. Plaese install it before begin."
+if test -z "$(type sudo)"; then
+	echo "sudo command not found. Please install it before begin."
 	exit 1
 fi
 
@@ -53,10 +53,17 @@ unset UNAME
 case $DISTRO in
 	"Ubuntu"| *"debian"*)
 		sudo apt update
-		sudo apt -y install zsh wget git exa curl
+		sudo apt -y install zsh wget git curl vim exa
+		if [ $? -gt 0 ]; then
+			exit 1
+		fi
+		exa_installed="one more non zero string"
 		;;
 	*"redhat"*)
-		sudo dnf install -y zsh wget git exa curl sqlite
+		sudo yum install -y zsh wget git curl sqlite vim
+		if [ $? -gt 0 ]; then
+			exit 1
+		fi
 		;;
 	*)
 		if test -z manual_packet_install; then
@@ -78,14 +85,23 @@ else
 	curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -o /tmp/ohmyzshinstall.sh
 	sed -i "s/exec zsh -l//" /tmp/ohmyzshinstall.sh
 	sh /tmp/ohmyzshinstall.sh
+	if [ $? -gt 0 ]; then
+		exit 1
+	fi
 	rm /tmp/ohmyzshinstall.sh
 fi
 # install or update autosuggestions
 if [ ! -d $ZSH_CUSTOM/plugins/zsh-autosuggestions ]; then
 	git clone https://github.com/zsh-users/zsh-autosuggestions $ZSH_CUSTOM/plugins/zsh-autosuggestions
+	if [ $? -gt 0 ]; then
+		exit 1
+	fi
 else
 	cd $ZSH_CUSTOM/plugins/zsh-autosuggestions
 	git pull
+	if [ $? -gt 0 ]; then
+		exit 1
+	fi
 fi
 
 cd $BASEDIR
@@ -96,7 +112,17 @@ if [ -f ~/.zshrc ] || [ -h ~/.zshrc ]; then
 fi
 
 cat $BASEDIR/zshrc | sed "s,HOME_DIR,$HOME," > ~/.zshrc
+if test -z "$exa_installed"; then
+	tee -a ~/.zshrc << END
+# exa aliases
+alias ls='exa'
+alias lst='exa -T'
+alias l='exa -lFh' 
+alias la='exa -laFh'
+alias ll='exa -l'
 
+END
+fi
 # vimrc install
 if [ -f ~/.vimrc ] || [ -h ~/.vimrc ]; then
 	mv ~/.vimrc ~/.vimrc.bak;
@@ -110,11 +136,16 @@ if [ ! -f ~/.vim/autoload/plug.vim ]; then
      https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 fi
 vim +PlugInstall +qall
+if [ $? -gt 0 ]; then
+	echo "Something wrong in vim plugin install."
+fi
 
 # install homebrew https://brew.sh/
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-
+if [ $? -gt 0 ]; then
+	exit 1
+fi
 # install spacer
 brew tap samwho/spacer
 brew install spacer
@@ -196,9 +227,9 @@ if test -z k8s; then
 fi
 #import bash history to zsh
 if test ! -f $HOME/.zsh_history; then
-	if which python3; then
+	if test -z "$(type python3)"; then
 		python3 ./bash_to_zsh_history.py
-	elif which ruby; then
+	elif test -z "$(type ruby)"; then
 		ruby ./bash_to_zsh_history.rb
 		exit
 	fi

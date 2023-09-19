@@ -61,13 +61,6 @@ export VISUAL=/usr/bin/vim
 
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 
-# install exa for pretty ls and uncoment this string
-alias ls='exa'
-alias lst='exa -T'
-alias l='exa -lFh' 
-alias la='exa -laFh'
-alias ll='exa -l'
-
 # kubecolor
 alias kubectl=kubecolor
 compdef kubecolor=kubectl
