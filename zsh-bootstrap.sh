@@ -52,7 +52,18 @@ fi
 unset UNAME
 
 case $DISTRO in
-	"Ubuntu"| *"debian"*)
+	"Ubuntu")
+		sudo apt update
+		sudo apt -y install zsh wget git curl vim passwd
+		if [ $? -gt 0 ]; then
+			exit 1
+		fi
+		sudo apt -y install exa
+		if [ $? -eq 0 ]; then
+			exa_installed="one more non zero string"
+		fi
+		;;
+	*"debian"*)
 		sudo apt update
 		sudo apt -y install zsh wget git curl vim exa passwd
 		if [ $? -gt 0 ]; then
