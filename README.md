@@ -25,7 +25,7 @@
 
 В zellij увеличина история прокрутки
 
-Проверен на Ubuntu, Oracle Linux 9
+Проверен на Ubuntu LTS > 20.04, Debian > 10, Centos 8, Oracle Linux 9
 
 ## vim
 Для vim устанавливаются:
