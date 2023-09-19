@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
 
+usage() {
+	echo -e "Options:\n[-k | --k8s] - install tools for k8s\n[-m | --manual-install] - Before run manually install packages: zsh git curl sqlite chsh"
+}
 SCRIPT=$(readlink -f "$0")
 BASEDIR=$(dirname "$SCRIPT")
 ZSH_CUSTOM=$HOME/.oh-my-zsh/custom
 zshrc_template="zshrc"
-VALID_ARGS=$(getopt -o k,m --long k8s,manual -- "$@")
+VALID_ARGS=$(getopt -o k,m,h --long k8s,manual-install,help -- "$@")
 if [[ $? -ne 0 ]]; then
     exit 1;
 fi
@@ -13,19 +16,27 @@ eval set -- "$VALID_ARGS"
 while [ : ]; do
   case "$1" in
     -k | --k8s)
-        echo "Processing k8s option"
+        echo "Processing k8s option. installing tools for k8s"
 		k8s_install="non zero string ;)"
 		zshrc_template="zshrc-k8s"
         shift
         ;;
-    -m | --manual)
-        echo "Processing manual option. Manually install packages: zsh wget git curl sqlite"
+    -m | --manual-install)
+        echo "Processing manual option. Manually install packages: zsh git curl sqlite"
+		manual_packet_install="non zero string ;)"
+        shift
+        ;;
+    -h | --help)
+        echo "Processing manual option. Manually install packages: zsh git curl sqlite"
 		manual_packet_install="non zero string ;)"
         shift
         ;;
     --) shift; 
         break 
         ;;
+	*) 
+	usage:
+	;;
   esac
 done
 
@@ -54,7 +65,7 @@ unset UNAME
 case $DISTRO in
 	"Ubuntu"|*"debian"*)
 		sudo apt update
-		sudo apt -y install zsh wget git curl vim passwd
+		sudo apt -y install zsh git curl vim passwd
 		if [ $? -gt 0 ]; then
 			exit 1
 		fi
@@ -64,14 +75,14 @@ case $DISTRO in
 		fi
 		;;
 	*"redhat"*)
-		sudo yum install -y zsh wget git curl sqlite vim util-linux-user
+		sudo yum install -y zsh git curl sqlite vim util-linux-user
 		if [ $? -gt 0 ]; then
 			exit 1
 		fi
 		;;
 	*)
 		if ! test -z manual_packet_install; then
-			echo -e "I dont know your distr.\nPlease, manualy install zsh wget git exa curl sqlite.\nAfter install run script with option --manual"
+			echo -e "I dont know your distr.\nPlease, manualy install zsh git exa curl sqlite.\nAfter install run script with option --manual-install"
 			exit 1
 		fi
 		;;
