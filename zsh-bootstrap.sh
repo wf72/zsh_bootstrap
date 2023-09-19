@@ -4,6 +4,36 @@ SCRIPT=$(readlink -f "$0")
 BASEDIR=$(dirname "$SCRIPT")
 ZSH_CUSTOM=$HOME/.oh-my-zsh/custom
 
+VALID_ARGS=$(getopt -o k,m --long k8s,manual -- "$@")
+if [[ $? -ne 0 ]]; then
+    exit 1;
+fi
+
+eval set -- "$VALID_ARGS"
+while [ : ]; do
+  case "$1" in
+    -k | --k8s)
+        echo "Processing k8s option"
+		k8s_install="non zero string ;)"
+        shift
+        ;;
+    -m | --manual)
+        echo "Processing manual option. Manually install packages: zsh wget git exa curl sqlite"
+		manual_packet_install="non zero string ;)"
+        shift
+        ;;
+    --) shift; 
+        break 
+        ;;
+  esac
+done
+
+# check sudo
+if test ! -z $(type sudo); then
+	echo "sudo command not found. Plaese install it before begin."
+	exit 1
+fi
+
 # install zsh
 UNAME=$(uname | tr "[:upper:]" "[:lower:]")
 # If Linux, try to determine specific distribution
@@ -20,27 +50,42 @@ fi
 [ "$DISTRO" == "" ] && export DISTRO=$UNAME
 unset UNAME
 
-if [ "$DISTRO" == "Ubuntu" ]; then
-	sudo apt update
-	sudo apt -y install zsh wget git exa curl
-fi
+case $DISTRO in
+	"Ubuntu"| *"debian"*)
+		sudo apt update
+		sudo apt -y install zsh wget git exa curl
+		;;
+	*"redhat"*)
+		sudo dnf install -y zsh wget git exa curl sqlite
+		;;
+	*)
+		if test -z manual_packet_install; then
+			echo "I dont know your distr. Please, manualy install zsh wget git exa curl sqlite. After install run script with option --manual"
+			exit 1
+		fi
+		;;
+esac
 
-if [[ "$DISTRO" == *"redhat"* ]]; then
-	sudo dnf install -y zsh wget git exa curl sqlite
-fi
 unset DISTRO
 
 cd $HOME
 
-### install oh_my_zsh https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
-curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -o /tmp/ohmyzshinstall.sh
-sed -i "s/exec zsh -l//" /tmp/ohmyzshinstall.sh
-sh /tmp/ohmyzshinstall.sh
-rm /tmp/ohmyzshinstall.sh
-
-# install autosuggestions
+# install or update oh-my-zsh https://ohmyz.sh/
+if test -d $HOME/.oh-my-zsh; then
+	omz update
+else
+	### install oh_my_zsh https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
+	curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -o /tmp/ohmyzshinstall.sh
+	sed -i "s/exec zsh -l//" /tmp/ohmyzshinstall.sh
+	sh /tmp/ohmyzshinstall.sh
+	rm /tmp/ohmyzshinstall.sh
+fi
+# install or update autosuggestions
 if [ ! -d $ZSH_CUSTOM/plugins/zsh-autosuggestions ]; then
 	git clone https://github.com/zsh-users/zsh-autosuggestions $ZSH_CUSTOM/plugins/zsh-autosuggestions
+else
+	cd $ZSH_CUSTOM/plugins/zsh-autosuggestions
+	git pull
 fi
 
 cd $BASEDIR
@@ -90,14 +135,73 @@ fi
 if [ -f ~/.config/zellij/config.kdl ] || [ -h ~/.config/zellij/config.kdl ]; then
 	mv ~/.config/zellij/config.kdl ~/.config/zellij/config.kdl.bak;
 fi
-cp $BASEDIR/zellig.config.kdl ~/.config/zellij/config.kdl
+cp $BASEDIR/zellij.config.kdl ~/.config/zellij/config.kdl
 
+
+# k8s
+if test -z k8s; then
+	# install helm
+	brew install helm
+
+	# install kubecolor https://github.com/hidetatz/kubecolor
+	brew install hidetatz/tap/kubecolor
+
+	# install k9s https://k9scli.io/
+	brew install derailed/k9s/k9s
+
+	# install krew https://krew.sigs.k8s.io/docs/user-guide/setup/install/
+	cd "$(mktemp -d)" &&
+	OS="$(uname | tr '[:upper:]' '[:lower:]')" &&
+	ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')" &&
+	KREW="krew-${OS}_${ARCH}" &&
+	curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/${KREW}.tar.gz" &&
+	tar zxvf "${KREW}.tar.gz" &&
+	./"${KREW}" install krew
+	export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+	cd $BASEDIR
+
+	# ktop https://github.com/vladimirvivien/ktop
+	kubectl krew install ktop
+
+	# kubelogin aka oidc-login https://github.com/int128/kubelogin
+	kubectl krew install oidc-login
+
+	# ketall https://github.com/corneliusweig/ketall
+	kubectl krew install get-all
+
+	# install kubectl
+	curl -L https://dl.k8s.io/release/$KUBECTL_VERSION/bin/linux/amd64/kubectl -o /tmp/kubectl
+	sudo install -b /tmp/kubectl /usr/bin
+	rm -f /tmp/kubectl
+
+	# install argocd cli
+	curl -sSL -o /tmp/argocd https://github.com/argoproj/argo-cd/releases/download/$ARGOCD_VERSION/argocd-linux-amd64
+	sudo install -b /tmp/argocd /usr/local/bin
+	rm -f /tmp/argocd
+
+	# install kubectx and kubens
+	if [ ! -d /opt/kubectx ]; then
+	sudo git clone https://github.com/ahmetb/kubectx /opt/kubectx
+	else
+	cd /opt/kubectx
+	sudo git pull
+	fi
+	cd $BASEDIR
+	sudo ln -fs /opt/kubectx/kubectx /usr/local/bin/kubectx
+	sudo ln -fs /opt/kubectx/kubens /usr/local/bin/kubens
+	mkdir -p ~/.oh-my-zsh/completions
+	chmod -R 755 ~/.oh-my-zsh/completions
+	ln -fs /opt/kubectx/completion/_kubectx.zsh ~/.oh-my-zsh/completions/_kubectx.zsh
+	ln -fs /opt/kubectx/completion/_kubens.zsh ~/.oh-my-zsh/completions/_kubens.zsh
+fi
 #import bash history to zsh
-if which python3; then
-	python3 ./bash_to_zsh_history.py
-elif which ruby; then
-	ruby ./bash_to_zsh_history.rb
-	exit
+if test ! -f $HOME/.zsh_history; then
+	if which python3; then
+		python3 ./bash_to_zsh_history.py
+	elif which ruby; then
+		ruby ./bash_to_zsh_history.rb
+		exit
+	fi
 fi
 
 unset SCRIPT
