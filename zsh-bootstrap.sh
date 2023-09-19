@@ -3,7 +3,7 @@
 SCRIPT=$(readlink -f "$0")
 BASEDIR=$(dirname "$SCRIPT")
 ZSH_CUSTOM=$HOME/.oh-my-zsh/custom
-
+zshrc_template="zshrc"
 VALID_ARGS=$(getopt -o k,m --long k8s,manual -- "$@")
 if [[ $? -ne 0 ]]; then
     exit 1;
@@ -15,6 +15,7 @@ while [ : ]; do
     -k | --k8s)
         echo "Processing k8s option"
 		k8s_install="non zero string ;)"
+		zshrc_template="zshrc-k8s"
         shift
         ;;
     -m | --manual)
@@ -53,14 +54,14 @@ unset UNAME
 case $DISTRO in
 	"Ubuntu"| *"debian"*)
 		sudo apt update
-		sudo apt -y install zsh wget git curl vim exa
+		sudo apt -y install zsh wget git curl vim exa passwd
 		if [ $? -gt 0 ]; then
 			exit 1
 		fi
 		exa_installed="one more non zero string"
 		;;
 	*"redhat"*)
-		sudo yum install -y zsh wget git curl sqlite vim
+		sudo yum install -y zsh wget git curl sqlite vim util-linux-user
 		if [ $? -gt 0 ]; then
 			exit 1
 		fi
@@ -111,8 +112,8 @@ if [ -f ~/.zshrc ] || [ -h ~/.zshrc ]; then
 	mv ~/.zshrc ~/.zshrc.bak;
 fi
 
-cat $BASEDIR/zshrc | sed "s,HOME_DIR,$HOME," > ~/.zshrc
-if test -z "$exa_installed"; then
+cat $BASEDIR/$zshrc_template | sed "s,HOME_DIR,$HOME," > ~/.zshrc
+if test ! -z "$exa_installed"; then
 	tee -a ~/.zshrc << END
 # exa aliases
 alias ls='exa'
@@ -234,7 +235,7 @@ if test ! -f $HOME/.zsh_history; then
 		exit
 	fi
 fi
-
+echo "To change your default shell, run this command:\nchsh -s $(type -p zsh)"
 unset SCRIPT
 unset BASEDIR
 unset ZSH_CUSTOM
