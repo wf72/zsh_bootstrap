@@ -80,7 +80,7 @@ cd $HOME
 
 # install or update oh-my-zsh https://ohmyz.sh/
 if test -d $HOME/.oh-my-zsh; then
-	omz update
+	$HOME/.oh-my-zsh/tools/upgrade.sh
 else
 	### install oh_my_zsh https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
 	curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -o /tmp/ohmyzshinstall.sh
