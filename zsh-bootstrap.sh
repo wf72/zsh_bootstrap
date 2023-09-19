@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 usage() {
-	echo -e "Options:\n[-k | --k8s] - install tools for k8s\n[-m | --manual-install] - Before run manually install packages: zsh git curl sqlite chsh"
+	echo -e "Options:\n[-k | --k8s] - install tools for k8s\n[-m | --manual-install] - Before run manually install packages: zsh git curl sqlite chsh gcc"
+	exit
 }
 SCRIPT=$(readlink -f "$0")
 BASEDIR=$(dirname "$SCRIPT")
@@ -27,15 +28,14 @@ while [ : ]; do
         shift
         ;;
     -h | --help)
-        echo "Processing manual option. Manually install packages: zsh git curl sqlite"
-		manual_packet_install="non zero string ;)"
-        shift
+		usage
+		shift
         ;;
     --) shift; 
         break 
         ;;
 	*) 
-	usage:
+	usage
 	;;
   esac
 done
@@ -65,7 +65,7 @@ unset UNAME
 case $DISTRO in
 	"Ubuntu"|*"debian"*)
 		sudo apt update
-		sudo apt -y install zsh git curl vim passwd
+		sudo apt -y install zsh git curl vim passwd build-essential
 		if [ $? -gt 0 ]; then
 			exit 1
 		fi
@@ -75,7 +75,7 @@ case $DISTRO in
 		fi
 		;;
 	*"redhat"*)
-		sudo yum install -y zsh git curl sqlite vim util-linux-user
+		sudo yum install -y zsh git curl sqlite vim util-linux-user gcc gcc-c++ make 
 		if [ $? -gt 0 ]; then
 			exit 1
 		fi

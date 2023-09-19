@@ -6,12 +6,6 @@ apt update
 apt -y install sudo
 ```
 
-Желательно добавить пакеты для сборки, например в Ubuntu|Debian установить build-essential 
-```
-sudo apt update
-sudo apt -y install sudo build-essential
-```
-
 # Скрипт устанавливает:
 
 * zsh
