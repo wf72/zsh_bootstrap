@@ -67,7 +67,7 @@ case $DISTRO in
 		fi
 		;;
 	*)
-		if test -z manual_packet_install; then
+		if ! test -z manual_packet_install; then
 			echo -e "I dont know your distr.\nPlease, manualy install zsh wget git exa curl sqlite.\nAfter install run script with option --manual"
 			exit 1
 		fi
