@@ -95,8 +95,7 @@ if test -d $HOME/.oh-my-zsh; then
 else
 	### install oh_my_zsh https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
 	curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -o /tmp/ohmyzshinstall.sh
-	sed -i "s/exec zsh -l//" /tmp/ohmyzshinstall.sh
-	sh /tmp/ohmyzshinstall.sh
+	sh /tmp/ohmyzshinstall.sh --unattended
 	if [ $? -gt 0 ]; then
 		exit 1
 	fi
@@ -155,7 +154,7 @@ if [ $? -gt 0 ]; then
 fi
 
 # install homebrew https://brew.sh/
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+/bin/bash -c "NONINTERACTIVE=1 $(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 if [ $? -gt 0 ]; then
 	exit 1
@@ -251,7 +250,6 @@ if test ! -f $HOME/.zsh_history; then
 		python3 ./bash_to_zsh_history.py
 	elif test -z "$(type ruby)"; then
 		ruby ./bash_to_zsh_history.rb
-		exit
 	fi
 fi
 echo -e "To change your default shell, run this command:\nchsh -s $(type -p zsh)"
