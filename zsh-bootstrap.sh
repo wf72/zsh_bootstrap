@@ -68,7 +68,7 @@ case $DISTRO in
 		;;
 	*)
 		if test -z manual_packet_install; then
-			echo "I dont know your distr. Please, manualy install zsh wget git exa curl sqlite. After install run script with option --manual"
+			echo -e "I dont know your distr.\nPlease, manualy install zsh wget git exa curl sqlite.\nAfter install run script with option --manual"
 			exit 1
 		fi
 		;;
@@ -235,7 +235,7 @@ if test ! -f $HOME/.zsh_history; then
 		exit
 	fi
 fi
-echo "To change your default shell, run this command:\nchsh -s $(type -p zsh)"
+echo -e "To change your default shell, run this command:\nchsh -s $(type -p zsh)"
 unset SCRIPT
 unset BASEDIR
 unset ZSH_CUSTOM
