@@ -1,15 +1,26 @@
 # ZSH Boostrap scripts
 
-Скрипт устанавливает:
+Для использования необходим sudo, установите перед началом использования (хотя он обычно установлен во всех системах).
+```
+apt update
+apt -y install sudo
+```
+
+Желательно добавить пакеты для сборки, например в Ubuntu|Debian установить build-essential 
+```
+sudo apt update
+sudo apt -y install sudo build-essential
+```
+
+# Скрипт устанавливает:
 
 * zsh
 * [oh-my-zsh](https://ohmyz.sh/)
 * [zellij](https://zellij.dev/)
 * git
-* wget
 * curl
 * [brew](https://brew.sh/)
-* [exa](https://github.com/ogham/exa)
+* [exa](https://github.com/ogham/exa) (Только в Ubuntu >22.10 и Debian)
 * [vim-plug](https://github.com/junegunn/vim-plug)
 * [spacer](https://github.com/samwho/spacer)
 
@@ -25,7 +36,7 @@
 
 В zellij увеличина история прокрутки
 
-Проверен на Ubuntu, Oracle Linux 9
+Проверен на Ubuntu LTS 20.04-22.04, Debian 10-12, Centos 8, Oracle Linux 8-9
 
 ## vim
 Для vim устанавливаются:
@@ -54,6 +65,7 @@
 git clone https://github.com/wf72/zsh_bootstrap.git
 cd zsh_bootstrap/
 bash ./zsh-bootstrap.sh
+chsh -s /usr/bin/zsh
 ```
 
 ## Import history
