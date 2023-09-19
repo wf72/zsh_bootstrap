@@ -49,3 +49,12 @@ export EDITOR=/usr/bin/vim
 export VISUAL=/usr/bin/vim
 
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+# brew completions
+if type brew &>/dev/null
+then
+  FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+
+  autoload -Uz compinit
+  compinit
+fi
