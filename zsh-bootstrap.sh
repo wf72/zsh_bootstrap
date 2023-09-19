@@ -41,7 +41,7 @@ while [ : ]; do
 done
 
 # check sudo
-if test -z "$(type sudo)"; then
+if test -z "$(type -p sudo)"; then
 	echo "sudo command not found. Please install it before begin."
 	exit 1
 fi
@@ -81,7 +81,7 @@ case $DISTRO in
 		fi
 		;;
 	*)
-		if ! test -z manual_packet_install; then
+		if test -n "$manual_packet_install"; then
 			echo -e "I dont know your distr.\nPlease, manualy install zsh git exa curl sqlite.\nAfter install run script with option --manual-install"
 			exit 1
 		fi
@@ -126,7 +126,7 @@ if [ -f $HOME/.zshrc ] || [ -h $HOME/.zshrc ]; then
 fi
 
 cat $BASEDIR/$zshrc_template | sed "s,HOME_DIR,$HOME," > $HOME/.zshrc
-if test ! -z "$exa_installed"; then
+if test -n "$exa_installed"; then
 	tee -a $HOME/.zshrc << END
 # exa aliases
 alias ls='exa'
@@ -192,7 +192,7 @@ cp $BASEDIR/zellij.config.kdl $HOME/.config/zellij/config.kdl
 
 
 # k8s
-if test -z k8s_install; then
+if test -n "$k8s_install"; then
 	# install helm
 	brew install -q helm
 
@@ -252,9 +252,9 @@ if test -z k8s_install; then
 fi
 #import bash history to zsh
 if test ! -f $HOME/.zsh_history; then
-	if test -z "$(type python3)"; then
+	if test -n "$(type -p python3)"; then
 		python3 ./bash_to_zsh_history.py
-	elif test -z "$(type ruby)"; then
+	elif test -n "$(type -p ruby)"; then
 		ruby ./bash_to_zsh_history.rb
 	fi
 fi
