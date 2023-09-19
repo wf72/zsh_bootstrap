@@ -52,7 +52,7 @@ fi
 unset UNAME
 
 case $DISTRO in
-	"Ubuntu")
+	"Ubuntu"|*"debian"*)
 		sudo apt update
 		sudo apt -y install zsh wget git curl vim passwd
 		if [ $? -gt 0 ]; then
@@ -62,14 +62,6 @@ case $DISTRO in
 		if [ $? -eq 0 ]; then
 			exa_installed="one more non zero string"
 		fi
-		;;
-	*"debian"*)
-		sudo apt update
-		sudo apt -y install zsh wget git curl vim exa passwd
-		if [ $? -gt 0 ]; then
-			exit 1
-		fi
-		exa_installed="one more non zero string"
 		;;
 	*"redhat"*)
 		sudo yum install -y zsh wget git curl sqlite vim util-linux-user
@@ -189,15 +181,18 @@ cp $BASEDIR/zellij.config.kdl $HOME/.config/zellij/config.kdl
 
 
 # k8s
-if test -z k8s; then
+if test -z k8s_install; then
 	# install helm
-	$brew install -q helm
+	brew install -q helm
+
+	# https://github.com/jonmosco/kube-ps1
+	brew install -q kube-ps1
 
 	# install kubecolor https://github.com/hidetatz/kubecolor
-	$brew install -q hidetatz/tap/kubecolor
+	brew install -q hidetatz/tap/kubecolor
 
 	# install k9s https://k9scli.io/
-	$brew install -q derailed/k9s/k9s
+	brew install -q derailed/k9s/k9s
 
 	# install krew https://krew.sigs.k8s.io/docs/user-guide/setup/install/
 	cd "$(mktemp -d)" &&
