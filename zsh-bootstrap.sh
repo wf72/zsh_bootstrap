@@ -119,13 +119,13 @@ fi
 cd $BASEDIR
 
 # replace home dir in our config
-if [ -f $HOME/.zshrc ] || [ -h $HOME/.zshrc ]; then
-	mv $HOME/.zshrc $HOME/.zshrc.bak;
+if [ -f ~/.zshrc ] || [ -h ~/.zshrc ]; then
+	mv ~/.zshrc ~/.zshrc.bak;
 fi
 
-cat $BASEDIR/$zshrc_template | sed "s,HOME_DIR,$HOME," > $HOME/.zshrc
+cat $BASEDIR/$zshrc_template | sed "s,HOME_DIR,$HOME," > ~/.zshrc
 if test ! -z "$exa_installed"; then
-	tee -a $HOME/.zshrc << END
+	tee -a ~/.zshrc << END
 # exa aliases
 alias ls='exa'
 alias lst='exa -T'
@@ -136,20 +136,18 @@ alias ll='exa -l'
 END
 fi
 # vimrc install
-if [ -f $HOME/.vimrc ] || [ -h $HOME/.vimrc ]; then
-	mv $HOME/.vimrc $HOME/.vimrc.bak;
+if [ -f ~/.vimrc ] || [ -h ~/.vimrc ]; then
+	mv ~/.vimrc ~/.vimrc.bak;
 fi
 
-cp $BASEDIR/.vimrc $HOME/.vimrc
+cp $BASEDIR/.vimrc ~/.vimrc
 
 # install vim-plug
-if [ ! -f $HOME/.vim/autoload/plug.vim ]; then
-  curl -fLo $HOME/.vim/autoload/plug.vim --create-dirs \
+if [ ! -f ~/.vim/autoload/plug.vim ]; then
+  curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
      https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 fi
-sed -i 's/colorscheme tender/" colorscheme tender/g' $HOME/.vimrc
 vim +PlugInstall +qall
-sed -i 's/" colorscheme tender/colorscheme tender/g' $HOME/.vimrc
 if [ $? -gt 0 ]; then
 	echo "Something wrong in vim plugin install."
 fi
@@ -164,14 +162,8 @@ fi
 brew tap samwho/spacer
 brew install spacer
 
-# install or update zsh-syntax-highlighting
-if test ! -d ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting; then
-git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-else
-cd ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-git pull
-cd -
-fi
+# install zsh-syntax-highlighting
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 
 # isntall zellij (tmux analog, but more better)
 curl -sSL https://github.com/zellij-org/zellij/releases/latest/download/zellij-x86_64-unknown-linux-musl.tar.gz -o /tmp/zellij.tar.gz
@@ -179,14 +171,14 @@ tar -xzf /tmp/zellij.tar.gz -C /tmp
 sudo install -b /tmp/zellij /usr/local/bin
 rm -f /tmp/zellij
 
-if ! test -d $HOME/.config/zellij; then
-	mkdir -p $HOME/.config/zellij
+if ! test -d ~/.config/zellij; then
+	mkdir -p ~/.config/zellij
 fi
 
-if [ -f $HOME/.config/zellij/config.kdl ] || [ -h $HOME/.config/zellij/config.kdl ]; then
-	mv $HOME/.config/zellij/config.kdl $HOME/.config/zellij/config.kdl.bak;
+if [ -f ~/.config/zellij/config.kdl ] || [ -h ~/.config/zellij/config.kdl ]; then
+	mv ~/.config/zellij/config.kdl ~/.config/zellij/config.kdl.bak;
 fi
-cp $BASEDIR/zellij.config.kdl $HOME/.config/zellij/config.kdl
+cp $BASEDIR/zellij.config.kdl ~/.config/zellij/config.kdl
 
 
 # k8s
@@ -240,10 +232,10 @@ if test -z k8s; then
 	cd $BASEDIR
 	sudo ln -fs /opt/kubectx/kubectx /usr/local/bin/kubectx
 	sudo ln -fs /opt/kubectx/kubens /usr/local/bin/kubens
-	mkdir -p $HOME/.oh-my-zsh/completions
-	chmod -R 755 $HOME/.oh-my-zsh/completions
-	ln -fs /opt/kubectx/completion/_kubectx.zsh $HOME/.oh-my-zsh/completions/_kubectx.zsh
-	ln -fs /opt/kubectx/completion/_kubens.zsh $HOME/.oh-my-zsh/completions/_kubens.zsh
+	mkdir -p ~/.oh-my-zsh/completions
+	chmod -R 755 ~/.oh-my-zsh/completions
+	ln -fs /opt/kubectx/completion/_kubectx.zsh ~/.oh-my-zsh/completions/_kubectx.zsh
+	ln -fs /opt/kubectx/completion/_kubens.zsh ~/.oh-my-zsh/completions/_kubens.zsh
 fi
 #import bash history to zsh
 if test ! -f $HOME/.zsh_history; then
