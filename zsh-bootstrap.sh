@@ -161,7 +161,7 @@ if [ $? -gt 0 ]; then
 fi
 # install spacer
 brew tap samwho/spacer
-brew install spacer
+brew install -q spacer
 
 # install or update zsh-syntax-highlighting
 if test ! -d ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting; then
@@ -191,13 +191,13 @@ cp $BASEDIR/zellij.config.kdl $HOME/.config/zellij/config.kdl
 # k8s
 if test -z k8s; then
 	# install helm
-	brew install helm
+	$brew install -q helm
 
 	# install kubecolor https://github.com/hidetatz/kubecolor
-	brew install hidetatz/tap/kubecolor
+	$brew install -q hidetatz/tap/kubecolor
 
 	# install k9s https://k9scli.io/
-	brew install derailed/k9s/k9s
+	$brew install -q derailed/k9s/k9s
 
 	# install krew https://krew.sigs.k8s.io/docs/user-guide/setup/install/
 	cd "$(mktemp -d)" &&
