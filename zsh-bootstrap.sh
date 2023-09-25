@@ -7,6 +7,8 @@ usage() {
 SCRIPT=$(readlink -f "$0")
 BASEDIR=$(dirname "$SCRIPT")
 ZSH_CUSTOM=$HOME/.oh-my-zsh/custom
+KUBECTL_VERSION=v1.23.4
+ARGOCD_VERSION=v2.6.11
 zshrc_template="zshrc"
 VALID_ARGS=$(getopt -o k,m,h --long k8s,manual-install,help -- "$@")
 if [[ $? -ne 0 ]]; then
