@@ -27,6 +27,7 @@ plugins=(
   vagrant
   vagrant-prompt
   zsh-syntax-highlighting
+  ssh-agent
 )
 
 source $ZSH/oh-my-zsh.sh

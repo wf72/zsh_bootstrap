@@ -28,6 +28,7 @@ plugins=(
   history
   argocd
   zsh-syntax-highlighting
+  ssh-agent
 )
 
 source $ZSH/oh-my-zsh.sh
