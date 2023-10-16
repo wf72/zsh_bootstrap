@@ -1,13 +1,18 @@
 #!/usr/bin/env bash
-set -x 
+
+SCRIPT=$(basename "$0")
+BASEDIR=$(cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd)
+ZSH_CUSTOM=$HOME/.oh-my-zsh/custom
+KUBECTL_VERSION=v1.23.4
+ARGOCD_VERSION=v2.6.11
+zshrc_template="zshrc"
+
 usage() {
 	echo -e "Options:\n[-k | --k8s] - install tools for k8s\n[-m | --manual-install] - Before run manually install packages: zsh git curl sqlite chsh gcc"
 	exit
 }
 
-installbrew() {
-	# install homebrew https://brew.sh/
-	/bin/bash -c "NONINTERACTIVE=1 $(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+brewpath() {
 	if test "$(uname | tr '[:upper:]' '[:lower:]')" == "linux"; then
 		brewpath="/home/linuxbrew/.linuxbrew/bin/brew"
 	elif test "$(uname | tr '[:upper:]' '[:lower:]')" == "darwin"; then
@@ -16,18 +21,19 @@ installbrew() {
 		printf "Homebrew is only supported on macOS and Linux."
 		exit 1
 	fi
-	eval "$($brewpath shellenv)"
+	printf $brewpath
+}
+
+installbrew() {
+	# install homebrew https://brew.sh/
+	/bin/bash -c "NONINTERACTIVE=1 $(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+	eval "$($(brewpath) shellenv)"
 	if [ $? -gt 0 ]; then
 		exit 1
 	fi
 }
 
-SCRIPT=$(basename "$0")
-BASEDIR=$(cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd)
-ZSH_CUSTOM=$HOME/.oh-my-zsh/custom
-KUBECTL_VERSION=v1.23.4
-ARGOCD_VERSION=v2.6.11
-zshrc_template="zshrc"
 VALID_ARGS=$(getopt -o k,m,h --long k8s,manual-install,help -- "$@")
 if [[ $? -ne 0 ]]; then
     exit 1;
@@ -148,7 +154,7 @@ if [ -f $HOME/.zshrc ] || [ -h $HOME/.zshrc ]; then
 	mv $HOME/.zshrc $HOME/.zshrc.bak;
 fi
 
-cat $BASEDIR/$zshrc_template | sed "s,HOME_DIR,$HOME," > $HOME/.zshrc
+cat $BASEDIR/$zshrc_template | sed "s,HOME_DIR,$HOME," | sed "s,BREWPATH_REPLACE,$(brewpath)," > $HOME/.zshrc 
 if test -n "$exa_installed"; then
 	tee -a $HOME/.zshrc << END
 # exa aliases
@@ -184,6 +190,7 @@ installbrew
 # install spacer
 brew tap samwho/spacer
 brew install -q spacer
+brew install -q bat
 
 # install or update zsh-syntax-highlighting
 if test ! -d ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting; then

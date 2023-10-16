@@ -49,7 +49,10 @@ export HISTIGNORE="ls:cd:cd -:pwd:exit:date:* --help";
 export EDITOR=/usr/bin/vim
 export VISUAL=/usr/bin/vim
 
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+eval "$(BREWPATH_REPLACE shellenv)"
+
+# batcat alias
+alias cat='bat'
 
 # brew completions
 if type brew &>/dev/null

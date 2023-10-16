@@ -66,7 +66,10 @@ export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 alias kubectl=kubecolor
 compdef kubecolor=kubectl
 
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+eval "$(BREWPATH_REPLACE shellenv)"
+
+# batcat alias
+alias cat='bat'
 
 # brew completions
 if type brew &>/dev/null
