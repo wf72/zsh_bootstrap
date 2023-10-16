@@ -1,11 +1,29 @@
 #!/usr/bin/env bash
-
+set -x 
 usage() {
 	echo -e "Options:\n[-k | --k8s] - install tools for k8s\n[-m | --manual-install] - Before run manually install packages: zsh git curl sqlite chsh gcc"
 	exit
 }
-SCRIPT=$(readlink -f "$0")
-BASEDIR=$(dirname "$SCRIPT")
+
+installbrew() {
+	# install homebrew https://brew.sh/
+	/bin/bash -c "NONINTERACTIVE=1 $(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+	if test "$(uname | tr '[:upper:]' '[:lower:]')" == "linux"; then
+		brewpath="/home/linuxbrew/.linuxbrew/bin/brew"
+	elif test "$(uname | tr '[:upper:]' '[:lower:]')" == "darwin"; then
+		brewpath="/opt/homebrew/bin/brew"
+	else
+		printf "Homebrew is only supported on macOS and Linux."
+		exit 1
+	fi
+	eval "$($brewpath shellenv)"
+	if [ $? -gt 0 ]; then
+		exit 1
+	fi
+}
+
+SCRIPT=$(basename "$0")
+BASEDIR=$(cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd)
 ZSH_CUSTOM=$HOME/.oh-my-zsh/custom
 KUBECTL_VERSION=v1.23.4
 ARGOCD_VERSION=v2.6.11
@@ -82,6 +100,9 @@ case $DISTRO in
 			exit 1
 		fi
 		;;
+	*"darwin"*)
+		;;
+				
 	*)
 		if test -n "$manual_packet_install"; then
 			echo -e "I dont know your distr.\nPlease, manualy install zsh git exa curl sqlite.\nAfter install run script with option --manual-install"
@@ -158,12 +179,8 @@ if [ $? -gt 0 ]; then
 	echo "Something wrong in vim plugin install."
 fi
 
-# install homebrew https://brew.sh/
-/bin/bash -c "NONINTERACTIVE=1 $(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-if [ $? -gt 0 ]; then
-	exit 1
-fi
+installbrew
+
 # install spacer
 brew tap samwho/spacer
 brew install -q spacer
