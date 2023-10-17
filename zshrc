@@ -62,3 +62,6 @@ then
   autoload -Uz compinit
   compinit
 fi
+
+# macos zsh-autosuggestions accept word on "option + f"
+bindkey 'ƒ' forward-word
