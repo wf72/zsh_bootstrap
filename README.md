@@ -6,6 +6,17 @@ apt update
 apt -y install sudo
 ```
 
+Проверен на:
+* Ubuntu LTS 20.04-22.04
+* Debian 10-12
+* Centos 8
+* Oracle Linux 8-9
+* Macos 14
+
+Не работает:
+* на Linux с процессорами Arm из-за ограничений brew
+* под пользователем root из-за ограничений brew
+
 # Скрипт устанавливает:
 
 * zsh
@@ -30,7 +41,7 @@ apt -y install sudo
 
 В zellij увеличина история прокрутки
 
-Проверен на Ubuntu LTS 20.04-22.04, Debian 10-12, Centos 8, Oracle Linux 8-9
+
 
 ## vim
 Для vim устанавливаются:
