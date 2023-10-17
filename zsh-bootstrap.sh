@@ -1,11 +1,42 @@
 #!/usr/bin/env bash
 
+VALID_ARGS=$(getopt -o k,m,h --long k8s,manual-install,help -- "$@")
+if [[ $? -ne 0 ]]; then
+    exit 1;
+fi
+
+eval set -- "$VALID_ARGS"
+while [ : ]; do
+  case "$1" in
+    -k | --k8s)
+        echo "Processing k8s option. installing tools for k8s"
+		k8s_install="non zero string ;)"
+        shift
+        ;;
+    -m | --manual-install)
+        echo "Processing manual option. Manually install packages: zsh git curl sqlite"
+		manual_packet_install="non zero string ;)"
+        shift
+        ;;
+    -h | --help)
+		usage
+		shift
+        ;;
+    --) shift; 
+        break 
+        ;;
+	*) 
+	usage
+	;;
+  esac
+done
+
 SCRIPT=$(basename "$0")
 BASEDIR=$(cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd)
 ZSH_CUSTOM=$HOME/.oh-my-zsh/custom
 KUBECTL_VERSION=v1.23.4
 ARGOCD_VERSION=v2.6.11
-zshrc_template="zshrc"
+zshrc_template="templates/zshrc.tpl"
 
 usage() {
 	echo -e "Options:\n[-k | --k8s] - install tools for k8s\n[-m | --manual-install] - Before run manually install packages: zsh git curl sqlite chsh gcc"
@@ -27,44 +58,13 @@ brewpath() {
 installbrew() {
 	# install homebrew https://brew.sh/
 	/bin/bash -c "NONINTERACTIVE=1 $(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-	eval "$($(brewpath) shellenv)"
 	if [ $? -gt 0 ]; then
 		exit 1
 	fi
+	eval "$($(brewpath) shellenv)"
 }
 
-VALID_ARGS=$(getopt -o k,m,h --long k8s,manual-install,help -- "$@")
-if [[ $? -ne 0 ]]; then
-    exit 1;
-fi
 
-eval set -- "$VALID_ARGS"
-while [ : ]; do
-  case "$1" in
-    -k | --k8s)
-        echo "Processing k8s option. installing tools for k8s"
-		k8s_install="non zero string ;)"
-		zshrc_template="zshrc-k8s"
-        shift
-        ;;
-    -m | --manual-install)
-        echo "Processing manual option. Manually install packages: zsh git curl sqlite"
-		manual_packet_install="non zero string ;)"
-        shift
-        ;;
-    -h | --help)
-		usage
-		shift
-        ;;
-    --) shift; 
-        break 
-        ;;
-	*) 
-	usage
-	;;
-  esac
-done
 
 # check sudo
 if test -z "$(type -p sudo)"; then
@@ -149,23 +149,6 @@ fi
 
 cd $BASEDIR
 
-# replace home dir in our config
-if [ -f $HOME/.zshrc ] || [ -h $HOME/.zshrc ]; then
-	mv $HOME/.zshrc $HOME/.zshrc.bak;
-fi
-
-cat $BASEDIR/$zshrc_template | sed "s,HOME_DIR,$HOME," | sed "s,BREWPATH_REPLACE,$(brewpath)," > $HOME/.zshrc 
-if test -n "$exa_installed"; then
-	tee -a $HOME/.zshrc << END
-# exa aliases
-alias ls='exa'
-alias lst='exa -T'
-alias l='exa -lFh' 
-alias la='exa -laFh'
-alias ll='exa -l'
-
-END
-fi
 # vimrc install
 if [ -f $HOME/.vimrc ] || [ -h $HOME/.vimrc ]; then
 	mv $HOME/.vimrc $HOME/.vimrc.bak;
@@ -180,17 +163,29 @@ if [ ! -f $HOME/.vim/autoload/plug.vim ]; then
 fi
 sed -i 's/colorscheme tender/" colorscheme tender/g' $HOME/.vimrc
 vim +PlugInstall +qall
-sed -i 's/" colorscheme tender/colorscheme tender/g' $HOME/.vimrc
 if [ $? -gt 0 ]; then
 	echo "Something wrong in vim plugin install."
 fi
+sed -i 's/" colorscheme tender/colorscheme tender/g' $HOME/.vimrc
 
 installbrew
+if [ $? -gt 0 ]; then
+	exit 1
+fi
 
 # install spacer
 brew tap samwho/spacer
 brew install -q spacer
+
+# install batcat
 brew install -q bat
+
+# fix getopt to work with long parameters
+if test "$DISTRO" == *"darwin"*; then
+	# install gnu-getops
+	brew install gnu-getopt
+	brew link --force gnu-getopt
+fi
 
 # install or update zsh-syntax-highlighting
 if test ! -d ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting; then
@@ -219,6 +214,16 @@ cp $BASEDIR/zellij.config.kdl $HOME/.config/zellij/config.kdl
 
 # k8s
 if test -n "$k8s_install"; then
+	export k8s_plugins="kubectl
+  kube-ps1
+  minikube
+  helm
+  history
+  argocd"
+
+	# install kubectl
+	brew install -q kubectl
+
 	# install helm
 	brew install -q helm
 
@@ -251,22 +256,16 @@ if test -n "$k8s_install"; then
 	# ketall https://github.com/corneliusweig/ketall
 	kubectl krew install get-all
 
-	# install kubectl
-	curl -L https://dl.k8s.io/release/$KUBECTL_VERSION/bin/linux/amd64/kubectl -o /tmp/kubectl
-	sudo install -b /tmp/kubectl /usr/bin
-	rm -f /tmp/kubectl
 
 	# install argocd cli
-	curl -sSL -o /tmp/argocd https://github.com/argoproj/argo-cd/releases/download/$ARGOCD_VERSION/argocd-linux-amd64
-	sudo install -b /tmp/argocd /usr/local/bin
-	rm -f /tmp/argocd
+	brew install -q argocd
 
 	# install kubectx and kubens
 	if [ ! -d /opt/kubectx ]; then
-	sudo git clone https://github.com/ahmetb/kubectx /opt/kubectx
+		sudo git clone https://github.com/ahmetb/kubectx /opt/kubectx
 	else
-	cd /opt/kubectx
-	sudo git pull
+		cd /opt/kubectx
+		sudo git pull
 	fi
 	cd $BASEDIR
 	sudo ln -fs /opt/kubectx/kubectx /usr/local/bin/kubectx
@@ -276,6 +275,39 @@ if test -n "$k8s_install"; then
 	ln -fs /opt/kubectx/completion/_kubectx.zsh $HOME/.oh-my-zsh/completions/_kubectx.zsh
 	ln -fs /opt/kubectx/completion/_kubens.zsh $HOME/.oh-my-zsh/completions/_kubens.zsh
 fi
+
+
+# install zshrc
+
+if test -z "$exa_installed"; then
+	brew install -q exa
+	if [ $? -eq 0 ]; then
+		exa_installed="one more non zero string"
+	fi
+fi
+# add aliases if exa installed
+if test -n "$exa_installed"; then
+	export exaaliases="
+# exa aliases
+alias ls='exa'
+alias lst='exa -T'
+alias l='exa -lFh' 
+alias la='exa -laFh'
+alias ll='exa -l'
+
+"
+fi
+# backup config
+if [ -f $HOME/.zshrc ] || [ -h $HOME/.zshrc ]; then
+	mv $HOME/.zshrc $HOME/.zshrc.bak;
+fi
+
+
+#cat $BASEDIR/$zshrc_template | sed "s,HOME_DIR,$HOME," | sed "s,BREWPATH_REPLACE,$(brewpath)," > $HOME/.zshrc
+export brewpath=$(brewpath)
+cat $BASEDIR/$zshrc_template | envsubst '$brewpath,$HOME,$exaaliases,$k8s_plugins' > $HOME/.zshrc 
+
+
 #import bash history to zsh
 if test ! -f $HOME/.zsh_history; then
 	if test -n "$(type -p python3)"; then
