@@ -39,7 +39,7 @@ ARGOCD_VERSION=v2.6.11
 zshrc_template="templates/zshrc.tpl"
 
 usage() {
-	echo -e "Options:\n[-k | --k8s] - install tools for k8s\n[-m | --manual-install] - Before run manually install packages: zsh git curl sqlite chsh gcc"
+	echo -e "Options:\n[-k | --k8s] - install tools for k8s\n[-m | --manual-install] - Before run manually install packages: zsh git curl sqlite chsh gcc gettext"
 	exit
 }
 
@@ -91,7 +91,7 @@ unset UNAME
 case $DISTRO in
 	"Ubuntu"|*"debian"*)
 		sudo apt update
-		sudo apt -y install zsh git curl vim passwd build-essential
+		sudo apt -y install zsh git curl vim passwd build-essential gettext-base
 		if [ $? -gt 0 ]; then
 			exit 1
 		fi
@@ -101,7 +101,7 @@ case $DISTRO in
 		fi
 		;;
 	*"redhat"*)
-		sudo yum install -y zsh git curl sqlite vim util-linux-user gcc gcc-c++ make 
+		sudo yum install -y zsh git curl sqlite vim util-linux-user gcc gcc-c++ make gettext
 		if [ $? -gt 0 ]; then
 			exit 1
 		fi
@@ -111,7 +111,7 @@ case $DISTRO in
 				
 	*)
 		if test -n "$manual_packet_install"; then
-			echo -e "I dont know your distr.\nPlease, manualy install zsh git exa curl sqlite.\nAfter install run script with option --manual-install"
+			echo -e "I dont know your distr.\nPlease, manualy install zsh git exa curl sqlite gettext.\nAfter install run script with option --manual-install"
 			exit 1
 		fi
 		;;
