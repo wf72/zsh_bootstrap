@@ -180,6 +180,9 @@ brew install -q spacer
 # install batcat
 brew install -q bat
 
+# install hstr
+brew install -q hstr
+
 # fix getopt to work with long parameters
 if test "$DISTRO" == *"darwin"*; then
 	# install gnu-getops
@@ -277,7 +280,6 @@ if test -n "$k8s_install"; then
 fi
 
 
-# install zshrc
 
 if test -z "$exa_installed"; then
 	brew install -q exa
@@ -303,6 +305,7 @@ if [ -f $HOME/.zshrc ] || [ -h $HOME/.zshrc ]; then
 fi
 
 
+# install zshrc
 #cat $BASEDIR/$zshrc_template | sed "s,HOME_DIR,$HOME," | sed "s,BREWPATH_REPLACE,$(brewpath)," > $HOME/.zshrc
 export brewpath=$(brewpath)
 cat $BASEDIR/$zshrc_template | envsubst '$brewpath,$HOME,$exaaliases,$k8s_plugins' > $HOME/.zshrc 
