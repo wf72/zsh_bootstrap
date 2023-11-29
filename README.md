@@ -28,6 +28,7 @@ apt -y install sudo
 * [exa](https://github.com/ogham/exa) (Только в Ubuntu >22.10 и Debian)
 * [vim-plug](https://github.com/junegunn/vim-plug)
 * [spacer](https://github.com/samwho/spacer)
+* [hstr](https://github.com/dvorka/hstr)
 
 В .zshrc основные настройки/дополнения:
 
