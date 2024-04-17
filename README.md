@@ -80,3 +80,6 @@ chsh -s /usr/bin/zsh
 python3 ./bash_to_zsh_history.py
 ```
 
+# TODO
+- [ ] install pygmyntize
+- [ ] disable k8s in prompt when install without it
