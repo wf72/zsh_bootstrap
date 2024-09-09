@@ -45,7 +45,7 @@ PROMPT="╭─%{$FG[040]%}%n%{$reset_color%} %{$FG[239]%}at%{$reset_color%} %{$F
 # molecule autocomplit
 #eval "$(_MOLECULE_COMPLETE=SHELL_source molecule)"
 
-export HISTSIZE=32768;
+export HISTSIZE=3276800;
 export HISTFILESIZE=$HISTSIZE;
 export HISTCONTROL=ignoredups;
 export HISTIGNORE="ls:cd:cd -:pwd:exit:date:* --help";
