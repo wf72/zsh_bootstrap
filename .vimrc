@@ -22,7 +22,7 @@ set autowrite
 set hidden
 
 " not select string numbers
-set mouse=a
+" set mouse=a
 
 " set listchars=tab:··
 " set list
