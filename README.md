@@ -25,7 +25,7 @@ apt -y install sudo
 * git
 * curl
 * [brew](https://brew.sh/)
-* [exa](https://github.com/ogham/exa) (Только в Ubuntu >22.10 и Debian)
+* [eza](https://github.com/eza-community/eza)
 * [vim-plug](https://github.com/junegunn/vim-plug)
 * [spacer](https://github.com/samwho/spacer)
 * [hstr](https://github.com/dvorka/hstr)

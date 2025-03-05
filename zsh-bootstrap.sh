@@ -95,10 +95,6 @@ case $DISTRO in
 		if [ $? -gt 0 ]; then
 			exit 1
 		fi
-		sudo apt -y install exa
-		if [ $? -eq 0 ]; then
-			exa_installed="one more non zero string"
-		fi
 		;;
 	*"redhat"*)
 		sudo yum install -y zsh git curl sqlite vim util-linux-user gcc gcc-c++ make gettext
@@ -111,7 +107,7 @@ case $DISTRO in
 				
 	*)
 		if test -n "$manual_packet_install"; then
-			echo -e "I dont know your distr.\nPlease, manualy install zsh git exa curl sqlite gettext.\nAfter install run script with option --manual-install"
+			echo -e "I dont know your distr.\nPlease, manualy install zsh git curl sqlite gettext.\nAfter install run script with option --manual-install"
 			exit 1
 		fi
 		;;
@@ -281,21 +277,19 @@ fi
 
 
 
-if test -z "$exa_installed"; then
-	brew install -q exa
+	brew install -q eza
 	if [ $? -eq 0 ]; then
-		exa_installed="one more non zero string"
+		eza_installed="one more non zero string"
 	fi
-fi
-# add aliases if exa installed
-if test -n "$exa_installed"; then
-	export exaaliases="
-# exa aliases
-alias ls='exa'
-alias lst='exa -T'
-alias l='exa -lFh' 
-alias la='exa -laFh'
-alias ll='exa -l'
+# add aliases if eza installed
+if test -n "$eza_installed"; then
+	export ezaaliases="
+# eza aliases
+alias ls='eza'
+alias lst='eza -T'
+alias l='eza -lFh' 
+alias la='eza -laFh'
+alias ll='eza -l'
 
 "
 fi
@@ -308,7 +302,7 @@ fi
 # install zshrc
 #cat $BASEDIR/$zshrc_template | sed "s,HOME_DIR,$HOME," | sed "s,BREWPATH_REPLACE,$(brewpath)," > $HOME/.zshrc
 export brewpath=$(brewpath)
-cat $BASEDIR/$zshrc_template | envsubst '$brewpath,$HOME,$exaaliases,$k8s_plugins' > $HOME/.zshrc 
+cat $BASEDIR/$zshrc_template | envsubst '$brewpath,$HOME,$ezaaliases,$k8s_plugins' > $HOME/.zshrc 
 
 
 #import bash history to zsh
